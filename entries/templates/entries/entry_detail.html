@@ -1,0 +1,45 @@
+{% extends "entries/base.html" %}
+{% block content %}
+    <div class="col-md-8">
+
+        <a href="{% url 'blog-home' %}">Back to Home</a>
+        {% if error_message %}
+            <p class="card-text">{{ error_message }}</p>
+        {% else %}
+            <!-- Blog Post -->
+            <div class="card mb-4 mt-4">
+                <div class="card-body">
+                    <h2 class="card-title">{{ entry.title }}</h2>
+                    <p class="card-text">{{ entry.text|linebreaks }}</p>
+                </div>
+                <div class="card-footer text-muted">
+                    Posted on {{ entry.date }} by
+                    <span class="text-info mr-2">{{ entry.author }}</span>
+                </div>
+
+                {% for comment in entry.comment.all %}
+                <!-- Blog Post -->
+                <div class="card mb-4 mt-4">
+                    <div class="card-body">
+                        <p class="card-text">{{ comment.text| truncatechars:100 }}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Commented on {{ comment.date }} by
+                        <span class="text-info mr-2">{{ comment.author }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="card-body">
+                    {% if form %}
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form }}
+                            <button type="submit" class="btn btn-primary">Post Comment</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
